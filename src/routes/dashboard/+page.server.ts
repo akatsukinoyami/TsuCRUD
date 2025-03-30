@@ -1,17 +1,17 @@
-import { db } from "$lib/db";
+import { db } from '$lib/db';
 import type { PageServerLoad } from './$types';
-import type { Schema } from "$lib/types";
+import type { Schema } from '$lib/types';
 
 export const load: PageServerLoad = async () => {
-  // Получаем таблицы и их колонки
-  const tables = await db.execute(`
+	// Получаем таблицы и их колонки
+	const tables = await db.execute(`
     SELECT table_name, column_name, data_type, is_nullable 
     FROM information_schema.columns 
     WHERE table_schema = 'public'
   `);
 
-  // Получаем связи one-to-many
-  const oneToMany = await db.execute(`
+	// Получаем связи one-to-many
+	const oneToMany = await db.execute(`
     SELECT 
       tc.table_name AS child_table, 
       kcu.column_name AS child_column,
@@ -25,8 +25,8 @@ export const load: PageServerLoad = async () => {
     WHERE constraint_type = 'FOREIGN KEY'
   `);
 
-  // Получаем связи many-to-many (через таблицы-связки)
-  const manyToMany = await db.execute(`
+	// Получаем связи many-to-many (через таблицы-связки)
+	const manyToMany = await db.execute(`
     SELECT
       kc1.table_name AS link_table,
       kc1.column_name AS first_key,
@@ -53,47 +53,47 @@ export const load: PageServerLoad = async () => {
     AND cc1.table_name != cc2.table_name;
   `);
 
-  // Формируем JSON-объект
-  const schema: Schema = {};
-  tables.forEach((row: any) => {
-    if (!schema[row.table_name]) {
-      schema[row.table_name] = { columns: [], relations: { oneToMany: [], manyToMany: [] } };
-    }
-    schema[row.table_name].columns.push({
-        name: row.column_name,
-        type: row.data_type,
-        nullable: row.is_nullable === 'YES'
-    });
-  });
+	// Формируем JSON-объект
+	const schema: Schema = {};
+	tables.forEach((row: any) => {
+		if (!schema[row.table_name]) {
+			schema[row.table_name] = { columns: [], relations: { oneToMany: [], manyToMany: [] } };
+		}
+		schema[row.table_name].columns.push({
+			name: row.column_name,
+			type: row.data_type,
+			nullable: row.is_nullable === 'YES'
+		});
+	});
 
-  oneToMany.forEach((rel: any) => {
-    if (schema[rel.child_table]) {
-      schema[rel.child_table].relations.oneToMany.push({
-        column: rel.child_column,
-        references: { table: rel.parent_table, column: rel.parent_column }
-      });
-    }
-  });
+	oneToMany.forEach((rel: any) => {
+		if (schema[rel.child_table]) {
+			schema[rel.child_table].relations.oneToMany.push({
+				column: rel.child_column,
+				references: { table: rel.parent_table, column: rel.parent_column }
+			});
+		}
+	});
 
-  manyToMany.forEach((rel: any) => {
-    if (schema[rel.first_table] && schema[rel.second_table]) {
-      // Добавляем связь к первой таблице
-      schema[rel.first_table].relations.manyToMany.push({
-        via: rel.link_table,
-        targetTable: rel.second_table,
-        ownColumn: rel.first_column,
-        targetColumn: rel.second_column
-      });
+	manyToMany.forEach((rel: any) => {
+		if (schema[rel.first_table] && schema[rel.second_table]) {
+			// Добавляем связь к первой таблице
+			schema[rel.first_table].relations.manyToMany.push({
+				via: rel.link_table,
+				targetTable: rel.second_table,
+				ownColumn: rel.first_column,
+				targetColumn: rel.second_column
+			});
 
-      // Добавляем связь ко второй таблице
-      schema[rel.second_table].relations.manyToMany.push({
-        via: rel.link_table,
-        targetTable: rel.first_table,
-        ownColumn: rel.second_column,
-        targetColumn: rel.first_column
-      });
-    }
-  });
+			// Добавляем связь ко второй таблице
+			schema[rel.second_table].relations.manyToMany.push({
+				via: rel.link_table,
+				targetTable: rel.first_table,
+				ownColumn: rel.second_column,
+				targetColumn: rel.first_column
+			});
+		}
+	});
 
-  return { schema };
-}
+	return { schema };
+};
