@@ -1,3 +1,5 @@
+import type { ManyToMany, OneToMany } from "$lib/types";
+
 export async function fetchData(table: string, schema: any, apiUrl: string = '/api') {
   if (!table) return;
   
@@ -6,9 +8,9 @@ export async function fetchData(table: string, schema: any, apiUrl: string = '/a
 
 	// Список всех таблиц, которые нужно загрузить
 	const refTables = [
-		...oneToMany.map((r) => r.references.table),
-		...manyToMany.map((r) => r.via),
-		...manyToMany.map((r) => r.targetTable)
+		...oneToMany.map((r: OneToMany) => r.references.table),
+		...manyToMany.map((r: ManyToMany) => r.via),
+		...manyToMany.map((r: ManyToMany) => r.targetTable)
 	];
 
 	// Загружаем все данные параллельно
@@ -25,7 +27,7 @@ export async function fetchData(table: string, schema: any, apiUrl: string = '/a
 	data = data.map((row) => ({
 		...row,
 		...Object.fromEntries(
-			oneToMany.map((r) => [
+			oneToMany.map((r: OneToMany) => [
 				r.column,
 				refDataMap[r.references.table]?.find(
 					(refRow) => refRow[r.references.column] === row[r.column]
@@ -38,7 +40,7 @@ export async function fetchData(table: string, schema: any, apiUrl: string = '/a
 	data = data.map((row) => ({
 		...row,
 		...Object.fromEntries(
-			manyToMany.map((r) => {
+			manyToMany.map((r: ManyToMany) => {
 				const linkedRows = refDataMap[r.via]?.filter((link) => link[r.ownColumn] === row.id) || [];
 				const fullData = linkedRows
 					.map((link) =>

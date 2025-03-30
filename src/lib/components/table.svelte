@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { TextTransformer } from "$lib/utils";
+
 	let {
 		typename = 'user',
 		description = 'A list of all the users in your account including their name, title, email and role.',
@@ -10,14 +12,14 @@
 <div class="px-4 sm:px-6 lg:px-8">
 	<div class="sm:flex sm:items-center">
 		<div class="sm:flex-auto">
-			<h1 class="text-base font-semibold text-gray-900">{typename}</h1>
+			<h1 class="text-base font-semibold text-gray-900">{new TextTransformer(typename).capitalize()}</h1>
 			<p class="mt-2 text-sm text-gray-700">{description}</p>
 		</div>
 		<div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
 			<button
 				type="button"
 				class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-				>Add {typename}</button
+				>Add {new TextTransformer(typename).capitalize().singularize()}</button
 			>
 		</div>
 	</div>
@@ -34,7 +36,7 @@
 									class="
                     {i ? 'px-3 py-3.5' : 'py-3.5 pr-3 pl-4 sm:pl-0'}
                     text-left text-sm font-semibold text-gray-900
-                  ">{header}</th
+                  ">{new TextTransformer(header).humanize().capitalize()}</th
 								>
 							{/each}
 							<th scope="col" class="relative py-3.5 pr-4 pl-3 sm:pr-0">
