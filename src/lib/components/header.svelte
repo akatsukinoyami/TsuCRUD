@@ -19,9 +19,16 @@
     console.log(path, `/${path[1]}/${value}`);
     goto(`/${path[1]}/${value}`);
   }
+
+  function linkClasses(href: string, mobile: boolean = false) {
+    return {
+      "block": mobile,
+      "rounded-md px-3 py-2 text-sm font-medium": true,
+      "bg-gray-900 text-white": page?.url?.pathname.startsWith(`${href}/`),
+      "text-gray-300 hover:bg-gray-700 hover:text-white": !page?.url?.pathname.startsWith(`${href}/`),
+    }
+  }
 </script>
-
-
 <div class="min-h-full">
   <div class="bg-gray-800 pb-32">
     <nav class="bg-gray-800">
@@ -35,14 +42,7 @@
               <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
                   {#each links as { href, label }}
-                    <a {href} class={{
-                        "rounded-md px-3 py-2 text-sm font-medium": true,
-                        "bg-gray-900 text-white": page?.url?.pathname.startsWith(`${href}/`),
-                        "text-gray-300 hover:bg-gray-700 hover:text-white": !page?.url?.pathname.startsWith(`${href}/`),
-                      }}
-                      aria-current="page">
-                      {label}
-                    </a>
+                    <a href="{page.url.origin}/{href}" class={linkClasses(href)} aria-current="page">{label}</a>
                   {/each}
                 </div>
               </div>
@@ -96,14 +96,7 @@
         <div class="border-b border-gray-700 md:hidden" id="mobile-menu">
           <div class="space-y-1 px-2 py-3 sm:px-3">
             {#each links as { href, label }}
-              <a {href} class={{
-                  "block rounded-md px-3 py-2 text-base font-medium": true,
-                  "bg-gray-900 text-white": page?.url?.pathname.startsWith(`${href}/`),
-                  "text-gray-300 hover:bg-gray-700 hover:text-white": !page?.url?.pathname.startsWith(`${href}/`),
-                }}
-                aria-current="page">
-                {label}
-              </a>
+              <a href="{page.url.origin}/{href}" class={linkClasses(href, true)} aria-current="page">{label}</a>
             {/each}
 
             <Select
