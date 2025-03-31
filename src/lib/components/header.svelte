@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { page } from "$app/state";
 	import { TextTransformer } from "$lib/utils";
 	import Select from "./select.svelte";
@@ -7,12 +8,17 @@
     links = [
       { href: 'dashboard', label: "Dashboard" },
     ],
-    selectedTable = $bindable(),
-    tables = $bindable(),
+    tables,
     children
   } = $props(); 
 
   let mobileMenuState = $state(false);
+
+  function changeTable(value: string) {
+    const path = page.url.pathname.split('/');
+    console.log(path, `/${path[1]}/${value}`);
+    goto(`/${path[1]}/${value}`);
+  }
 </script>
 
 
@@ -44,7 +50,7 @@
             <div class="hidden md:block">
               <div class="ml-4 flex items-center md:ml-6">
                 <Select
-                  bind:value={selectedTable} 
+                  onselect={changeTable}
                   options={tables.map((table: string) => ({ id: table, name: new TextTransformer(table).capitalize() }))}
                   defaultName="Select Table"
                   right
@@ -101,7 +107,7 @@
             {/each}
 
             <Select
-              bind:value={selectedTable} 
+              onselect={changeTable}
               options={tables.map((table: string) => ({ id: table, name: table }))}
               defaultName="Select Table"
             />

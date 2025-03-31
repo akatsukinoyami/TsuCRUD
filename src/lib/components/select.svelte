@@ -7,10 +7,18 @@
     defaultValue = '',
     defaultName = '',
     value = $bindable(defaultOption ? defaultValue : options?.[0]?.id ?? ''),
+    onselect = () => {},
   } = $props();
 
   let open = $state(false);
   let name = $state(defaultOption ? defaultName : options?.[0]?.name);
+
+  function select(id: string, nameLocal: string) {
+    value = id; 
+    name = nameLocal; 
+    open = false;
+    onselect(id);
+  }
 </script>
 
 {#snippet selectOption(id: string, nameLocal: string)}
@@ -22,7 +30,7 @@
     }}
     role="menuitem" 
     tabindex="-1" 
-    onclick={() => { value = id; name = nameLocal; open = false }}
+    onclick={() => select(id, nameLocal)}
   >
   {nameLocal}
   </button>
