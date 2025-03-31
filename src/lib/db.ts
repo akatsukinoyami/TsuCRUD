@@ -1,7 +1,7 @@
 import pg from 'pg';
 
 const pool = new pg.Pool({
-	connectionString: import.meta.env.VITE_DB_URL,
+	connectionString: import.meta.env.VITE_DB_URL
 });
 
 export const db = {

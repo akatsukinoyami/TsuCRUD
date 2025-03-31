@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { TextTransformer } from "$lib/utils";
-	import { mdiDeleteOutline, mdiEyeOutline, mdiPencil } from "@mdi/js";
-	import Button from "./button.svelte";
+	import { TextTransformer } from '$lib/utils';
+	import { mdiDeleteOutline, mdiEyeOutline, mdiPencil } from '@mdi/js';
+	import Button from './button.svelte';
 
 	let {
 		typename = 'user',
@@ -11,7 +11,7 @@
 		callbacks = {
 			onshow: () => {},
 			onedit: () => {},
-			ondelete: () => {},
+			ondelete: () => {}
 		}
 	} = $props();
 
@@ -21,14 +21,18 @@
 <div class="px-4 sm:px-6 lg:px-8">
 	<div class="sm:flex sm:items-center">
 		<div class="sm:flex-auto">
-			<h1 class="text-base font-semibold text-gray-900">{new TextTransformer(typename).capitalize()}</h1>
+			<h1 class="text-base font-semibold text-gray-900">
+				{new TextTransformer(typename).capitalize()}
+			</h1>
 			<p class="mt-2 text-sm text-gray-700">{description}</p>
 		</div>
 		<div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
 			<button
 				type="button"
 				class="block rounded-md bg-gray-700 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-			>Add {new TextTransformer(typename).capitalize().singularize()}</button>
+			>
+				Add {new TextTransformer(typename).capitalize().singularize()}
+			</button>
 		</div>
 	</div>
 
@@ -63,13 +67,19 @@
                   ">{column}</td
 									>
 								{/each}
-								<td class="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
+								<td
+									class="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0"
+								>
 									<Button onclick={onshow} icon={mdiEyeOutline} />
 									<Button onclick={onedit} icon={mdiPencil} />
-									<Button onclick={ondelete} icon={mdiDeleteOutline} color={{
-										background: "hover:bg-red-700",
-										icon: "fill-red-700"
-									}}/>
+									<Button
+										onclick={ondelete}
+										icon={mdiDeleteOutline}
+										color={{
+											background: 'hover:bg-red-700',
+											icon: 'fill-red-700'
+										}}
+									/>
 								</td>
 							</tr>
 						{/each}

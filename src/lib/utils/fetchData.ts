@@ -1,8 +1,8 @@
-import type { ManyToMany, OneToMany } from "$lib/types";
+import type { ManyToMany, OneToMany } from '$lib/types';
 
 export async function fetchData(table: string, schema: any, apiUrl: string = '/api') {
-  if (!table) return;
-  
+	if (!table) return;
+
 	let data = await fetch(`${apiUrl}/${table}`).then((res) => res.json());
 	const { oneToMany, manyToMany } = schema[table].relations;
 

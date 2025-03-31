@@ -1,4 +1,4 @@
-export const introspectionQueryOneToMany =  `
+export const introspectionQueryOneToMany = `
   SELECT 
     tc.table_name AS child_table, 
     kcu.column_name AS child_column,

@@ -7,5 +7,5 @@
 </script>
 
 <Header {tables}>
-  {@render children?.()}
+	{@render children?.()}
 </Header>
